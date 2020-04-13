@@ -59,9 +59,16 @@ class App {
     };
 
     this.notes = [...this.notes, newNote];
-    console.log(this.notes);
+    //console.log(this.notes);
+    let fragment = new DocumentFragment();
     let placeHolder = document.getElementById("placeholder-text");
-    placeHolder.innerText = "new";
+    // this.notes.forEach(function (post) {
+    //   console.log(post);
+    var p_element = document.createElement("p");
+    p_element.innerHTML = `${note.title} <br/> ${note.text}`;
+    fragment.appendChild(p_element);
+    // });
+    placeHolder.appendChild(fragment);
   }
 }
 
