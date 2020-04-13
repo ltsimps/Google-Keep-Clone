@@ -2,11 +2,13 @@ class App {
   constructor() {
     this.notes = [];
 
-    console.log("Hello World");
+    this.$placeholder = document.querySelector("#placeholder");
     this.$form = document.querySelector("#form");
+    this.$notes = document.querySelector("#notes");
     this.$noteTitle = document.querySelector("#note-title");
     this.$noteText = document.querySelector("#note-text");
     this.$formButtons = document.querySelector("#form-buttons");
+
     this.addEventListeners();
   }
 
@@ -29,6 +31,7 @@ class App {
 
   handleFormClick(event) {
     const isFormClicked = this.$form.contains(event.target);
+
     if (isFormClicked) {
       this.openForm();
     } else {
@@ -37,17 +40,17 @@ class App {
   }
 
   openForm() {
-    this.$form.classList.toggle("form-open");
+    this.$form.classList.add("form-open");
     this.$noteTitle.style.display = "block";
     this.$formButtons.style.display = "block";
-    console.log("opening form");
   }
 
   closeForm() {
-    this.$form.classList.toggle("form-open");
+    this.$form.classList.remove("form-open");
     this.$noteTitle.style.display = "none";
     this.$formButtons.style.display = "none";
-    console.log("closing the form");
+    this.$noteTitle.value = "";
+    this.$noteText.value = "";
   }
 
   addNote(note) {
@@ -57,18 +60,31 @@ class App {
       color: "white",
       id: this.notes.length > 0 ? this.notes[this.notes.length - 1].id + 1 : 1,
     };
-
     this.notes = [...this.notes, newNote];
-    //console.log(this.notes);
-    let fragment = new DocumentFragment();
-    let placeHolder = document.getElementById("placeholder-text");
-    // this.notes.forEach(function (post) {
-    //   console.log(post);
-    var p_element = document.createElement("p");
-    p_element.innerHTML = `${note.title} <br/> ${note.text}`;
-    fragment.appendChild(p_element);
-    // });
-    placeHolder.appendChild(fragment);
+    this.displayNotes();
+    this.closeForm();
+  }
+
+  displayNotes() {
+    const hasNotes = this.notes.length > 0;
+    this.$placeholder.style.display = hasNotes ? "none" : "flex";
+
+    this.$notes.innerHTML = this.notes
+      .map(
+        (note) => `
+        <div style="background: ${note.color};" class="note">
+          <div class="${note.title && "note-title"}">${note.title}</div>
+          <div class="note-text">${note.text}</div>
+          <div class="toolbar-container">
+            <div class="toolbar">
+              <img class="toolbar-color" src="https://icon.now.sh/palette">
+              <img class="toolbar-delete" src="https://icon.now.sh/delete">
+            </div>
+          </div>
+        </div>
+     `
+      )
+      .join("");
   }
 }
 
